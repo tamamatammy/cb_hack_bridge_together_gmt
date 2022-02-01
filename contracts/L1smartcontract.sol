@@ -15,7 +15,11 @@ contract L1_Contract {
         L2Distributor = _l2Distributor;
     }
 
-    function deposit() public payable {
+    fallback() external payable { revert(); }
+
+    receive() external payable {}
+
+    function deposit() public payable returns(uint) {
         require(msg.value > 0, "Value should be greated than 0");
         addresses.push(payable(msg.sender));
         balances.push(msg.value);
@@ -29,16 +33,22 @@ contract L1_Contract {
             goToBridge();
             _reset();
         }
+        return addresses.length;
     }
 
     function goToBridge() public payable {
+
         console.log("CONTRACT goToBridge total_balance ", total_balance);
+
         uint256 remaining_value = total_balance - 200000;
+
         console.log("CONTRACT goToBridge ", remaining_value);
-        L1StandardBridge(payable(msg.sender)).depositETHTo {value: remaining_value} (
-        L2Distributor,
-        200000,
-        abi.encodeWithSignature(
+
+        L1StandardBridge(payable(address(this))).depositETHTo {value: remaining_value} (
+
+            L2Distributor,
+            200000,
+            abi.encodeWithSignature(
                 "depositFunds(address payable[] calldata, uint256[] calldata)",
                 addresses,
                 balances

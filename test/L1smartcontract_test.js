@@ -1,8 +1,10 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers, waffle } = require("hardhat");
+const provider = waffle.provider;
 
 describe("L1_Contract", function () {
   it("should send the funds", async function () {
+ 
     const L1_Contract = await ethers.getContractFactory("L1_Contract");
     const l2Address = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
     const userAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -10,6 +12,7 @@ describe("L1_Contract", function () {
 
     const usersAccounts = await ethers.getSigners();
     const user1 = usersAccounts[0]
+    console.log(user1.address)
     const user1Address = user1.getAddress()
     
     const instance = await L1_Contract.deploy(l2Address);
@@ -21,10 +24,17 @@ describe("L1_Contract", function () {
 
     // FIRST DEPOSIT
     console.log("----------FIRST DEPOSIT ")
-    const user1Instance = instance.connect(user1Address)
+
+    await instance.deposit({from: userAddress,  value: ethers.utils.parseEther("1.0")});
+    await instance.deposit({from: userAddress,  value: ethers.utils.parseEther("1.0")});
+    await instance.deposit({from: userAddress,  value: ethers.utils.parseEther("1.0")});
+    const balance = await provider.getBalance(instance.address)
+    console.log(balance)
+    // console.log(num_deposit)
+    // const user1Instance = instance.connect(user1Address)
     // const senderInitialBalance = await user1Instance.getSenderInitialBalance(userAddress)
-    senderInitialBalance = await ethers.provider.getBalance(user1Address)
-    console.log("senderInitialBalance", senderInitialBalance)
+    // senderInitialBalance = await ethers.provider.getBaance(user1Address)
+    // console.log("senderInitialBalance", senderInitialBalance)
     // await user1Instance.signTransaction(deposit({value: "1000000000000000000"}));
 
 
