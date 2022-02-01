@@ -25,11 +25,7 @@ contract L1_Contract {
         balances.push(msg.value);
         total_balance += msg.value;
 
-        console.log("CONTRACT sender balance",msg.sender.balance);
-
-        console.log("CONTRACT addresses length", addresses.length);
         if (addresses.length == 3){
-            console.log("CONTRACT about to goToBridge ");
             goToBridge();
             _reset();
         }
@@ -40,20 +36,19 @@ contract L1_Contract {
 
         console.log("CONTRACT goToBridge total_balance ", total_balance);
 
-        uint256 remaining_value = total_balance - 200000;
+        uint256 remaining_value = total_balance - 200000000;
 
         console.log("CONTRACT goToBridge ", remaining_value);
 
-        L1StandardBridge(payable(address(this))).depositETHTo {value: remaining_value} (
-
-            L2Distributor,
-            200000,
-            abi.encodeWithSignature(
-                "depositFunds(address payable[] calldata, uint256[] calldata)",
-                addresses,
-                balances
-            )
-        );
+        // L1StandardBridge(payable(address(this))).depositETHTo {value: remaining_value} (
+        //     L2Distributor,
+        //     200000000,
+        //     abi.encodeWithSignature(
+        //         "depositFunds(address payable[] calldata, uint256[] calldata)",
+        //         addresses,
+        //         balances
+        //     )
+        // );
     }
 
     function _reset() private {
@@ -70,7 +65,7 @@ contract L1_Contract {
     return total_balance;
     }
 
-    function getSenderInitialBalance(address a) public view returns(uint256 count) {
+    function getAccountBalance(address a) public view returns(uint256 count) {
         return a.balance;
     }
     
