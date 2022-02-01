@@ -6,14 +6,12 @@ import "hardhat/console.sol";
 
 contract L1_Contract {
     address public L2Distributor;
-    address public L1Contract;
 
     address payable[] addresses;
     uint256[] balances;
     uint256 total_balance;
 
-    constructor(address _l1, address _l2Distributor) {
-        L1Contract = _l1;
+    constructor(address _l2Distributor) {
         L2Distributor = _l2Distributor;
     }
 
