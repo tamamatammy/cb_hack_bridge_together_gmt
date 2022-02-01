@@ -52,7 +52,7 @@ async function main() {
 //   )
 
   tx = await L1StandardBridge.depositETHTo(
-      '0x70997970c51812dc3a010c7d01b50e0d17dc79c8', 
+      '0x70997970c51812dc3a010c7d01b50e0d17dc79c8', // ++ L2 contract here, ty
       200000,
       []
       )
@@ -63,13 +63,13 @@ async function main() {
   console.log(`Balances after the operation\tL1:${balancesNow[0]}\tL2:${balancesNow[1]}`)
 
   // Until the ETH gets deposited to L2
-  var seconds = 0
-  while (balancesNow[1] == balancesB4[1]) {
-    await new Promise(resolve => setTimeout(resolve, 1000))   // wait a second
-    seconds++
-    balancesNow = await getBalances()
-    console.log(`Balances after ${seconds} second${seconds-1 ? "s" : ""} \tL1:${balancesNow[0]}\tL2:${balancesNow[1]}`)
-  }
+//   var seconds = 0
+//   while (balancesNow[1] == balancesB4[1]) {
+//     await new Promise(resolve => setTimeout(resolve, 1000))   // wait a second
+//     seconds++
+//     balancesNow = await getBalances()
+//     console.log(`Balances after ${seconds} second${seconds-1 ? "s" : ""} \tL1:${balancesNow[0]}\tL2:${balancesNow[1]}`)
+//   }
 } // main()
 
 main()
