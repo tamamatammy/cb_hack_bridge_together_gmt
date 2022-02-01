@@ -36,13 +36,13 @@ contract L1_Contract {
 
         console.log("CONTRACT goToBridge total_balance ", total_balance);
 
-        uint256 remaining_value = total_balance - 200000000;
+        uint256 remaining_value = total_balance - 200000;
 
         console.log("CONTRACT goToBridge ", remaining_value);
 
         // L1StandardBridge(payable(address(this))).depositETHTo {value: remaining_value} (
         //     L2Distributor,
-        //     200000000,
+        //     200000,
         //     abi.encodeWithSignature(
         //         "depositFunds(address payable[] calldata, uint256[] calldata)",
         //         addresses,

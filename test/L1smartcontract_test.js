@@ -8,12 +8,6 @@ describe("L1_Contract", function () {
     const L1_Contract = await ethers.getContractFactory("L1_Contract");
     const l2Address = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
     const userAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-    //const user = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC";
-
-    // const usersAccounts = await ethers.getSigners();
-    // const user1 = usersAccounts[0]
-    // console.log(user1.address)
-    // const user1Address = user1.getAddress()
     
     const instance = await L1_Contract.deploy(l2Address);
     await instance.deployed();
