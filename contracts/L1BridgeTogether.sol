@@ -6,26 +6,34 @@ import "hardhat/console.sol";
 
 contract L1BridgeTogether {
     address public L2Distributor;
+    L1StandardBridge public l1StandardBridge;
 
     address payable[] addresses;
     uint256[] balances;
     uint256 totalBalance;
+    uint private maxCount = 3;
 
-    constructor(address _l2Distributor) {
+    constructor(address _l2Distributor, address payable standardBridge) {
         L2Distributor = _l2Distributor;
+        l1StandardBridge = L1StandardBridge(standardBridge);
     }
+
+    event L1BridgeTogetherFundsReceived(address adr, uint256 amount);
+    event L1BridgeTogetherGoToBridge(address payable[] adr, uint256[] amount);
 
     fallback() external payable { revert(); }
 
     receive() external payable {}
 
     function deposit() public payable returns(uint) {
+        emit L1BridgeTogetherFundsReceived(msg.sender, msg.value);
         require(msg.value > 0, "Value should be greated than 0");
         addresses.push(payable(msg.sender));
         balances.push(msg.value);
         totalBalance += msg.value;
 
-        if (addresses.length == 3){
+        console.log("CONTRACT current_count:", addresses.length);
+        if (addresses.length == maxCount){
             goToBridge();
             _reset();
         }
@@ -35,19 +43,26 @@ contract L1BridgeTogether {
     function goToBridge() public payable {
         console.log("CONTRACT goToBridge totalBalance ", totalBalance);
 
-        uint256 remainingAmount = totalBalance - 200000;
+        uint256 gas = 200000;
+        uint256 remainingAmount = totalBalance - gas;
+        uint256 gasShare = gas / maxCount;
 
-        console.log("CONTRACT goToBridge ", remainingAmount);
+        for (uint i = 0; i < addresses.length; i ++) {
+            balances[i] = balances[i] - gasShare;
+            totalBalance += balances[i];
+        }
+        
+        emit L1BridgeTogetherGoToBridge(addresses, balances);
 
-        // L1StandardBridge(payable(address(this))).depositETHTo {value: remainingAmount} (
-        //     L2Distributor,
-        //     200000000,
-        //     abi.encodeWithSignature(
-        //         "depositFunds(address payable[] calldata, uint256[] calldata)",
-        //         addresses,
-        //         balances
-        //     )
-        // );
+        l1StandardBridge.depositETHTo {value: remainingAmount} (
+             L2Distributor,
+             200000,
+             abi.encodeWithSignature(
+                 "depositFunds(address payable[] calldata, uint256[] calldata)",
+                 addresses,
+                 balances
+             )
+        );
     }
 
     function _reset() private {
@@ -66,6 +81,10 @@ contract L1BridgeTogether {
 
     function getAccountBalance(address a) public view returns(uint256 count) {
         return a.balance;
+    }
+
+    function getL2Distributor() public view returns(address) {
+        return L2Distributor;
     }
     
     function getContractBalance() public view returns(uint256 count) {
