@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Bridge Together </title>
+    <script src = https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js></script>
+
+</head>
+<body>
+    <h1>Bridge Together</h1>
+    <!-- 1. detect MetaMask is/is not installed -->
+    <div id="wallet-detected"></div>
+
+    <!-- 2.3.Get ms contract balance -->
+    <div></div>  
+    <button id="get-balance">Get Balance</button>
+    <input id="address-box" type="varchar" placeholder = "address">
+    <div id = address-balance></div>
+
+    <!-- 2. Connect user wallet  -->
+    <div>--------------------------------------------------------------------------------------------------------------------------</div>
+    <div></div>
+    <button id="wallet-connect">Connect to Wallet</button>
+    <div id = wallet-current-account></div>
+
+
+    <!-- 3. Deposit to bridge together contract -->
+    <div></div>  
+    <button id="deposit"> Deposit </button>
+    <input id="deposit-value-box" type="number" placeholder = "eth">
+    <div id = deposit></div>
+
+    <script src="dapp.js" ></script>   
+</body>
+</html>
