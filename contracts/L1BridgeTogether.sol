@@ -6,13 +6,15 @@ import "hardhat/console.sol";
 
 contract L1BridgeTogether {
     address public L2Distributor;
+    L1StandardBridge public l1StandardBridge;
 
     address payable[] addresses;
     uint256[] balances;
     uint256 totalBalance;
 
-    constructor(address _l2Distributor) {
+    constructor(address _l2Distributor, address payable standardBridge) {
         L2Distributor = _l2Distributor;
+        l1StandardBridge = L1StandardBridge(standardBridge);
     }
 
     fallback() external payable { revert(); }
@@ -39,15 +41,15 @@ contract L1BridgeTogether {
 
         console.log("CONTRACT goToBridge ", remainingAmount);
 
-        // L1StandardBridge(payable(address(this))).depositETHTo {value: remainingAmount} (
-        //     L2Distributor,
-        //     200000000,
-        //     abi.encodeWithSignature(
-        //         "depositFunds(address payable[] calldata, uint256[] calldata)",
-        //         addresses,
-        //         balances
-        //     )
-        // );
+        l1StandardBridge.depositETHTo {value: remainingAmount} (
+             L2Distributor,
+             200000000,
+             abi.encodeWithSignature(
+                 "depositFunds(address payable[] calldata, uint256[] calldata)",
+                 addresses,
+                 balances
+             )
+        );
     }
 
     function _reset() private {
